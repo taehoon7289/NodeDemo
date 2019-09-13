@@ -9,7 +9,7 @@ const MongoClient = require('mongodb').MongoClient
 let database
 
 const connectDB = () => {
-  let databaseUrl = 'mongodb://localhost:27017/'
+  let databaseUrl = 'mongodb://localhost:27017'
   MongoClient.connect(databaseUrl,(err,db) => {
     if (err) throw err
     console.log('데이터베이스(몽고디비)에 연결되었습니다.')
@@ -77,7 +77,7 @@ let authUser = (database, id, password, callback) => {
  * @param callback
  */
 let addUser = (database, id, password, callback) => {
-  let users = database.collection('user')
+  let users = database.collection('users')
   users.insertMany([{
     id: id,
     password: password
@@ -87,7 +87,7 @@ let addUser = (database, id, password, callback) => {
       return
     }
     if (result.insertedCount > 0) {
-      console.log('유저 추가됨')
+      console.log('유저 추가됨', result.insertedCount)
     } else {
       console.log('추가 안됨')
     }
@@ -116,6 +116,23 @@ router.get('/login', function(req, res, next) {
     id: req.query.id,
     password: req.query.password
   }
+  res.write(JSON.stringify({
+    id: req.query.id,
+    password: req.query.password,
+    cookies: req.cookies
+  }))
+  res.end()
+});
+
+router.get('/signup', function(req, res, next) {
+  let id = req.query.id
+  let password = req.query.password
+  addUser(database,id,password, (err, result) => {
+    if (err) throw err
+    if (result && result.insertedCount > 0) {
+      console.log("가입되었습니다.")
+    }
+  })
   res.write(JSON.stringify({
     id: req.query.id,
     password: req.query.password,
