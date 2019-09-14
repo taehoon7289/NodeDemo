@@ -25,10 +25,10 @@ app.use(cors())
 /**
  * 미들웨어 정의
  */
-app.use((req,res,next) => {
-    console.log('정적파일 호출 아닌 미들웨어 :: %s', '#0')
-    next()
-})
+// app.use((req,res,next) => {
+//     console.log('정적파일 호출 아닌 미들웨어 :: %s', '#0')
+//     next()
+// })
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
